@@ -8,7 +8,7 @@ const url = `postgres://${info.myElephentDBConfig.user}:${info.myElephentDBConfi
   * @param query, values
   * returns Integer
   */
-exports.run_query = async function run_query(query, values ="") {
+exports.run_query = async (query, values ="") => {
   try {
     const sequelize = new Sequelize(url)
     await sequelize.authenticate()

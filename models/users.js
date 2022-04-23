@@ -4,7 +4,7 @@ const db = require('../helper/postgresDB.js')
   *getUserAll
   *returns json
   */
-exports.getUserAll = async function getUserALl(){
+exports.getUserAll = async () => {
   const query = 'SELECT * FROM users'
   return data = await db.run_query(query)
 }
@@ -18,7 +18,7 @@ getUserByID = async function getUserByUsername(id) {
   *@param username
   *returns json
   */
-exports.getUserByUsername = async function getUserByUsername(username) {
+exports.getUserByUsername = async (username) => {
   const query = 'SELECT * FROM users WHERE username = ?'
   let values = [username]
   return data = await db.run_query(query, values)
