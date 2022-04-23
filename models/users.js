@@ -9,8 +9,10 @@ exports.getUserAll = async () => {
   return data = await db.run_query(query)
 }
 
-getUserByID = async function getUserByUsername(id) {
-  
+exports.getUserByID = async (id) => {
+  const query = 'SELECT * FROM users WHERE id = ?'
+  let values = [id]
+  return data = await db.run_query(query, values)
 }
 
 /**
