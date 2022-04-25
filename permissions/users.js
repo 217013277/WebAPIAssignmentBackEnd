@@ -5,17 +5,22 @@ const ac = new AccessControl()
 ac.grant('user').condition({Fn: 'EQUALS', args:{'requester': '$.owner'}}).execute('read').on('user', ['*', '!password', '!passwordSalt'])
 ac.grant('user').condition({Fn: 'EQUALS', args:{'requester': '$.owner'}}).execute('update').on('user', ['firstname', 'lastname', 'about', 'password', 'email', 'avatarURL'])
 
+// ac.grant('admin').extend('user')
 ac.grant('admin').execute('read').on('user')
 ac.grant('admin').execute('read').on('users')
 ac.grant('admin').execute('create').on('user')
 ac.grant('admin').execute('update').on('user')
 ac.grant('admin').condition({Fn: 'NOT_EQUALS', args:{'requester': '$.owner'}}).execute('delete').on('user')
 
+ac.grant('worker').condition({Fn: 'EQUALS', args:{'requester': '$.owner'}}).execute('read').on('user',['*', '!password','!passwordSalt'])
+ac.grant('worker').condition({Fn: 'EQUALS', args:{'requester': '$.owner'}}).execute('update').on('user',['about', 'password', 'avatarURL'])
+
 exports.readUserAll = (requester) => ac.can(requester.role).execute('read').sync().on('users')
 
-exports.readUser = (requester, data) => ac.can(requester.role).context({requester: requester.ID, owner: data.ID}).execute('read').sync().on('user')
-
-exports.createUser = (requester) => ac.can(requester.role).execute('create').sync().on('user')
+exports.readUser = (requester, id) => ac.can(requester.role).context({requester: requester.id, owner: id}).execute('read').sync().on('user')
 
 //updateUser
+exports.updateUser = (requester, id) => ac.can(requester.role).context({requester: requester.id, owner: id}).execute('update').sync().on('user')
+
 //deleteUser
+exports.deleteUser = (requester, data) => ac.can(requester.role).execute('delete').sync().on('user')
