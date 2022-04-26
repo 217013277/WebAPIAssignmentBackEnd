@@ -15,9 +15,9 @@ exports.getUserAll = async () => {
   *returns json
   */
 exports.getUserByID = async (id) => {
+  let userId = [id]
   const query = 'SELECT * FROM users WHERE id = ?'
-  let values = [id]
-  return data = await db.run_query(query, values)
+  return data = await db.run_query(query, userId)
 }
 
 /**
@@ -26,8 +26,8 @@ exports.getUserByID = async (id) => {
   *returns json
   */
 exports.getUserByUsername = async (username) => {
-  const query = 'SELECT * FROM users WHERE username = ?'
   let values = [username]
+  let query = 'SELECT * FROM users WHERE username = ?'
   return data = await db.run_query(query, values)
 }
 
@@ -47,6 +47,11 @@ exports.createUser = async (userDetails) => {
   return data = await db.run_query(query, values)
 }
 
+/**
+  *updateUser
+  *@param id, userDetails
+  *returns json
+  */
 exports.updateUser = async (id, userDetails) => {
   let userId = [id]
   let keys = Object.keys(userDetails)
@@ -54,4 +59,21 @@ exports.updateUser = async (id, userDetails) => {
   let values = Object.values(userDetails)
   let query = `UPDATE users SET ${keys} = ? WHERE id = ${userId} RETURNING *`
   return data = await db.run_query(query, values)
+}
+
+/**
+  *deleteUser
+  *@param id, userDetails
+  *returns json
+  */
+exports.deleteUser = async(id) => {
+  let userId = [id]
+  let query = `Delete from users WHERE id = ${userId}`
+  try {
+    await db.run_query(query, userId)
+    return {"status": 200}
+  } catch (error) {
+    return error
+  }
+  
 }

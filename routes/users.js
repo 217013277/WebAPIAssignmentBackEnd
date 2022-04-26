@@ -19,7 +19,7 @@ const getUserAll = async (ctx) => {
   }
 }
 
-const getUserByID = async (ctx) => {
+const getUserById = async (ctx) => {
   let id = ctx.params.id
   const permission = can.readUser(ctx.state.user, parseInt(id))
   if(!permission.granted) {
@@ -42,7 +42,7 @@ const createUser = async (ctx) => {
 
 const updateUser = async (ctx) => {
   let id = ctx.params.id
-  permission = can.updateUser(ctx.state.user, parseInt(id))
+  const permission = can.updateUser(ctx.state.user, parseInt(id))
   if (!permission.granted) {
     ctx.status = 403
   } else {
@@ -54,9 +54,24 @@ const updateUser = async (ctx) => {
   }
 }
 
+const deleteUserById = async (ctx) => {
+  let id = ctx.params.id
+  const permission = can.deleteUser(ctx.state.user, parseInt(id))
+  if (!permission.granted) {
+    ctx.status = 403
+  } else {
+    let result = await model.deleteUser(id)
+    if (result) {
+      ctx.status = result.status;
+      ctx.body = {id: parseInt(id)}
+    }
+  }
+}
+
 router.get('/', auth, getUserAll)
-router.get('/:id([0-9]{1,})', auth, getUserByID)
+router.get('/:id([0-9]{1,})', auth, getUserById)
 router.post('/', bodyParser(), createUser)
 router.post('/:id([0-9]{1,})', bodyParser(), auth, updateUser)
+router.delete('/:id([0-9]{1,})', auth, deleteUserById)
 
 module.exports = router

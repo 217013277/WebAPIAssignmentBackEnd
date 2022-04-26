@@ -23,4 +23,6 @@ exports.readUser = (requester, id) => ac.can(requester.role).context({requester:
 exports.updateUser = (requester, id) => ac.can(requester.role).context({requester: requester.id, owner: id}).execute('update').sync().on('user')
 
 //deleteUser
-exports.deleteUser = (requester, data) => ac.can(requester.role).execute('delete').sync().on('user')
+exports.deleteUser = (requester, id) => ac.can(requester.role).context({requester: requester.id, owner: id}).execute('delete').sync().on('user')
+
+
