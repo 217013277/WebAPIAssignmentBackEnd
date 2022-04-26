@@ -71,7 +71,7 @@ exports.deleteUser = async(id) => {
   let query = `Delete from users WHERE id = ${userId}`
   try {
     await db.run_query(query, userId)
-    return {"status": 200}
+    return {status: 200}
   } catch (error) {
     return error
   }
