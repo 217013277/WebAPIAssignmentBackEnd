@@ -1,61 +1,63 @@
 const Router = require('koa-router')
 const bodyParser = require('koa-bodyparser')
 
-const model = require('../models/users.js')
+const model = require('../models/workers.js')
 const auth = require('../controllers/auth.js')
-const can = require('../permissions/users.js')
+const can = require('../permissions/workers.js')
+const checkWorkerId = require('../tools/checkWorkerId.js')
 
-const router = Router({prefix: '/api/v1/users'})
+const router = Router({ prefix: '/api/v1/workers' })
 
-const getUserAll = async (ctx) => {
-  const permission = can.readUserAll(ctx.state.user)
-  if(!permission) {
+const getWorkerAll = async (ctx) => {
+  const permission = can.readWorkerAll(ctx.state.user)
+  if (!permission.granted) {
     ctx.status = 403
   } else {
-    let result = await model.getUserAll()
-    if(result.length) {
+    const result = await model.getWorkerAll()
+    if (result.length) {
       ctx.body = result
     }
   }
 }
 
-const getUserByID = async (ctx) => {
-  const permission = can.readUser(ctx.state.user, ctx)
-  if(!permission) {
+const getWorkerById = async (ctx) => {
+  const id = ctx.params.id
+  const permission = can.readWorker(ctx.state.user, parseInt(id))
+  if (!permission.granted) {
     ctx.status = 403
   } else {
-    let id = ctx.params.id
-    let result = await model.getUserByID(id)
-    if(result.length) {
+    const result = await model.getUserByID(id)
+    if (result.length) {
       ctx.body = result
     }
   }
 }
 
-const createUser = async (ctx) => {
-  let body = ctx.request.body
-  let result = await model.createUser(body)
-  if(result.length) {
+const createWorker = async (ctx) => {
+  const body = ctx.request.body
+  const result = await model.createWorker(body)
+  if (result.length) {
     ctx.body = result
   }
 }
 
-const updateUser = async (ctx) => {
-  permission = can.updateUser(ctx.state.user, ctx)
-  if (!permission) {
+const updateWorker = async (ctx) => {
+  const id = ctx.params.id
+  const permission = can.updateWorker(ctx.state.user, parseInt(id))
+  if (!permission.granted) {
     ctx.status = 403
   } else {
-    let body = ctx.request.body
-    let result = await model.updateUser(body)
-    if(result.length) {
+    const body = ctx.request.body
+    const result = await model.updateWorker(id, body)
+    if (result.length) {
       ctx.body = result
     }
   }
 }
 
-router.get('/', auth, getUserAll)
-router.get('/:id([0-9]{1,})', auth, getUserByID)
-router.post('/', bodyParser(), createUser)
-router.post('/workers', bodyParser(), updateUser)
+router.get('/', auth, getWorkerAll)
+router.get('/:id([0-9]{1,})', auth, getWorkerById)
+router.post('/', bodyParser(), checkWorkerId, createWorker)
+router.put('/:id([0-9]{1,})', bodyParser(), auth, updateWorker)
 
 module.exports = router

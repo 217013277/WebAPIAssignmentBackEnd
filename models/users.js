@@ -6,7 +6,8 @@ const db = require('../helper/postgresDB.js')
   */
 exports.getUserAll = async () => {
   const query = 'SELECT * FROM users'
-  return data = await db.run_query(query)
+  const data = await db.run_query(query)
+  return data
 }
 
 /**
@@ -15,9 +16,10 @@ exports.getUserAll = async () => {
   *returns json
   */
 exports.getUserByID = async (id) => {
-  let userId = [id]
+  const userId = [id]
   const query = 'SELECT * FROM users WHERE id = ?'
-  return data = await db.run_query(query, userId)
+  const data = await db.run_query(query, userId)
+  return data
 }
 
 /**
@@ -26,9 +28,10 @@ exports.getUserByID = async (id) => {
   *returns json
   */
 exports.getUserByUsername = async (username) => {
-  let values = [username]
-  let query = 'SELECT * FROM users WHERE username = ?'
-  return data = await db.run_query(query, values)
+  const values = [username]
+  const query = 'SELECT * FROM users WHERE username = ?'
+  const data = await db.run_query(query, values)
+  return data
 }
 
 /**
@@ -36,15 +39,15 @@ exports.getUserByUsername = async (username) => {
   *returns json
   */
 exports.createUser = async (userDetails) => {
-  console.log(userDetails)
   let keys = Object.keys(userDetails)
   keys = keys.join(',')
-  let values = Object.values(userDetails)
+  const values = Object.values(userDetails)
   let parm = ''
-  for (i = 0; i < values.length; i++) parm += '?,'
+  for (let i = 0; i < values.length; i++) parm += '?,'
   parm = parm.slice(0, -1)
-  let query = `INSERT INTO users (${keys}) VALUES (${parm}) RETURNING *`
-  return data = await db.run_query(query, values)
+  const query = `INSERT INTO users (${keys}) VALUES (${parm}) RETURNING *`
+  const data = await db.run_query(query, values)
+  return data
 }
 
 /**
@@ -53,12 +56,13 @@ exports.createUser = async (userDetails) => {
   *returns json
   */
 exports.updateUser = async (id, userDetails) => {
-  let userId = [id]
+  const userId = [id]
   let keys = Object.keys(userDetails)
   keys = keys.join(' = ?,')
-  let values = Object.values(userDetails)
-  let query = `UPDATE users SET ${keys} = ? WHERE id = ${userId} RETURNING *`
-  return data = await db.run_query(query, values)
+  const values = Object.values(userDetails)
+  const query = `UPDATE users SET ${keys} = ? WHERE id = ${userId} RETURNING *`
+  const data = await db.run_query(query, values)
+  return data
 }
 
 /**
@@ -66,14 +70,13 @@ exports.updateUser = async (id, userDetails) => {
   *@param id, userDetails
   *returns json
   */
-exports.deleteUser = async(id) => {
-  let userId = [id]
-  let query = `Delete from users WHERE id = ${userId}`
+exports.deleteUser = async (id) => {
+  const userId = [id]
+  const query = `Delete from users WHERE id = ${userId}`
   try {
-    await db.run_query(query, userId)
-    return {status: 200}
+    await db.run_query(query)
+    return { status: 200 }
   } catch (error) {
     return error
   }
-  
 }

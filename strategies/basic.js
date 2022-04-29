@@ -13,9 +13,9 @@ const checkUserAndPassword = async (username, password, done) => {
     console.log(`Error: during authentication for user ${username}`)
     return done(error)
   }
-  if(result.length) {
+  if (result.length) {
     const user = result[0]
-    if(verifyPassword(user, password)) {
+    if (verifyPassword(user, password)) {
       console.log(`Successfully authentication user ${username}`)
       return done(null, user)
     } else {

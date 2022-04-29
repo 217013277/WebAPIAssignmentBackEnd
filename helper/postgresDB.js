@@ -8,7 +8,7 @@ const url = `postgres://${info.myElephentDBConfig.user}:${info.myElephentDBConfi
   * @param query, values
   * returns Integer
   */
-exports.run_query = async (query, values ="") => {
+exports.run_query = async (query, values = '') => {
   try {
     const sequelize = new Sequelize(url)
     await sequelize.authenticate()
@@ -20,6 +20,6 @@ exports.run_query = async (query, values ="") => {
     return data
   } catch (error) {
     console.error(error, query, values)
-    throw 'Database query error'
+    throw new Error('Database query error')
   }
 }
