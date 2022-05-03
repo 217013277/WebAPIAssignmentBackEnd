@@ -26,8 +26,7 @@ exports.getWorkerAll = async () => {
 exports.getWorkerByID = async (id) => {
   const userId = [id]
   const query = 'SELECT * FROM users WHERE id = ?'
-  const data = await db.run_query(query, userId)
-  return data
+  return await db.run_query(query, userId)
 }
 
 /**
@@ -35,13 +34,14 @@ exports.getWorkerByID = async (id) => {
   *returns json
   */
 exports.createWorker = async (userDetails) => {
+  userDetails.role = "worker"
   let keys = Object.keys(userDetails)
   keys = keys.join(',')
   const values = Object.values(userDetails)
   let parm = ''
   for (let i = 0; i < values.length; i++) parm += '?,'
   parm = parm.slice(0, -1)
-  const query = `INSERT INTO users (${keys},role) VALUES (${parm},'worker') RETURNING *`
+  const query = `INSERT INTO users (${keys}) VALUES (${parm}) RETURNING *`
   const data = await db.run_query(query, values)
   return data
 }

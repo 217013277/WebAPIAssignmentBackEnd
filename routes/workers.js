@@ -26,7 +26,7 @@ const getWorkerById = async (ctx) => {
   if (!permission.granted) {
     ctx.status = 403
   } else {
-    const result = await model.getUserByID(id)
+    const result = await model.getWorkerByID(id)
     if (result.length) {
       ctx.body = result
     }

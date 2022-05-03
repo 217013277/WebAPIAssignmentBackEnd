@@ -6,6 +6,7 @@ const verifyPassword = (user, password) => {
 }
 
 const checkUserAndPassword = async (username, password, done) => {
+  console.log('Start Auth')
   let result
   try {
     result = await users.getUserByUsername(username)

@@ -65,6 +65,13 @@ exports.updateUser = async (id, userDetails) => {
   return data
 }
 
+exports.login = async(body) => {
+  const username = body.username
+  const password = body.password
+  const query = `SELECT username AND role FROM users WHERE username = '${username}' AND password = '${password}'`
+  return await db.run_query(query)
+}
+
 /**
   *deleteUser
   *@param id, userDetails

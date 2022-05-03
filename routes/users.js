@@ -68,10 +68,21 @@ const deleteUserById = async (ctx) => {
   }
 }
 
+const login = async (ctx) => {
+  console.log('start login')
+  console.log(ctx.state.user)
+  const body = ctx.state.user
+  let result = { id: body.id, username: body.username, password: body.password, role: body.role }
+    console.log(body)
+    ctx.status = 201
+    ctx.body = result
+}
+
 router.get('/', auth, getUserAll)
 router.get('/:id([0-9]{1,})', auth, getUserById)
 router.post('/', bodyParser(), createUser)
 router.put('/:id([0-9]{1,})', bodyParser(), auth, updateUser)
 router.delete('/:id([0-9]{1,})', auth, deleteUserById)
+router.post('/login', auth, login)
 
 module.exports = router
