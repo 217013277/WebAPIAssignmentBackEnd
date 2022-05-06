@@ -68,14 +68,14 @@ exports.updateDog = async (id, dogDetails) => {
 /**
   *deleteUser
   *@param id, userDetails
-  *returns json
+  *returns promise
   */
 exports.deleteDog = async (id) => {
   const dogId = [id]
-  const query = `Delete from users WHERE id = ${dogId}`
+  const query = `DELETE FROM dogs WHERE id = ${dogId}`
   try {
     await db.run_query(query)
-    return { status: 200 }
+    return { status: 202 }
   } catch (error) {
     return error
   }
